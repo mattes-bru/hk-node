@@ -10,7 +10,7 @@
 #include <RCSwitch.h>
 
 
-#define HOSTNAME "HK-Living-"
+#define HOSTNAME "HK-bedroom-"
 
 #define SENSOR_UPDATE_RATE 1000
 #define MQTT_RECONNECT_RATE 5000
@@ -21,7 +21,7 @@
 
 //#define SERIAL_VERBOSE
 
-const char* mqtt_server = "beaglebone";
+const char* mqtt_server = "homebridge-gateway";
 long lastReconnect = 0;
 long now = 0;
 long lastSensorUpdate = 0;
@@ -58,7 +58,7 @@ void reconnect() {
 
       // ... and resubscribe
       // client.subscribe("fairylight");
-      client.subscribe("elro/#");
+      client.subscribe("elro2/#");
     } else {
       Serial.print("failed, rc=");
       Serial.print(client.state());
@@ -78,7 +78,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
   char *netId = strtok(NULL, "/");
   char *deviceId = strtok(NULL, "/");
 
-  if(strcmp("elro", mainTopic) == 0) {
+  if(strcmp("elro2", mainTopic) == 0) {
     if(netId && deviceId) {
       bool value = (length == 4);
 
@@ -178,12 +178,12 @@ void loop()
 
       if(!isnan(h)) {
         String humString(h,2);
-        client.publish("living/sensors/hum", humString.c_str() );
+        client.publish("bedroom/sensors/hum", humString.c_str() );
 
       }
       if(!isnan(t)) {
         String tempString(t,2);
-        client.publish("living/sensors/temp", tempString.c_str() );
+        client.publish("bedroom/sensors/temp", tempString.c_str() );
 
       }
       lastSensorUpdate = now;
