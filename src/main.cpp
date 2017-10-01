@@ -21,7 +21,7 @@
 
 //#define SERIAL_VERBOSE
 
-const char* mqtt_server = "beaglebone";
+const char* mqtt_server = "homebridge-gateway";
 long lastReconnect = 0;
 long now = 0;
 long lastSensorUpdate = 0;

@@ -2,3 +2,5 @@
 .clang_complete
 .gcc-flags.json
 .piolibdeps
+.DS_Store
+.travis.yml
