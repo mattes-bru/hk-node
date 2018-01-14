@@ -1,6 +1,6 @@
-.pioenvs
+data/config.json
+.DS_Store
 .clang_complete
 .gcc-flags.json
-.piolibdeps
-.DS_Store
+.pioenvs
 .travis.yml
