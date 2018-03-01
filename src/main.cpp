@@ -51,19 +51,18 @@ void reconnect() {
         if(WiFi.status() == WL_CONNECTED) {
 
                 if(!setupDone) {
-                        settings.mqttServer().toCharArray(mqtt_server, 20);
                         ArduinoOTA.setHostname((const char *)WiFi.hostname().c_str());
                         ArduinoOTA.begin();
                         client.setClient(espClient);
-                        client.setServer(mqtt_server, 1883);
                         client.setCallback(callback);
 
                         setupDone = true;
                 }
 
-                Serial.print("Attempting MQTT connection ");
-                Serial.print(mqtt_server);
-                Serial.print(" ...");
+                settings.mqttServer().toCharArray(mqtt_server, 20);
+                client.setServer(mqtt_server, 1883);
+
+                Serial.print("Attempting MQTT connection... ");
                 // Attempt to connect
                 if (client.connect((const char *)WiFi.hostname().c_str())) {
                         Serial.println("connected");
@@ -199,12 +198,19 @@ void loop()
 
                   if(!isnan(t) && !isnan(h)) {
                           if(abs(lastTemperature - t)  >  0.1) {
+                                  Serial.print("Temperature update: ");
+                                  Serial.print(t);
+                                  Serial.println("°C");
                                   lastTemperature = t;
                                   String tempString(t,2);
                                   client.publish( mqttTemperatureTopic.c_str(), tempString.c_str(), true );
                           }
 
                           if(abs(lastHumidity - h)  >  1.0) {
+                                  Serial.print("Humidity update: ");
+                                  Serial.print(h);
+                                  Serial.println("%");
+
                                   lastHumidity = h;
                                   String humString(h,2);
                                   client.publish(mqttHumidityTopic.c_str(), humString.c_str(), true );

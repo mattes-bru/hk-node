@@ -48,72 +48,8 @@ bool Settings::readFromFlash()
                   }
 
                   return true;
-
                 }
-
         }
-
-
-/*
-        //HOSTNAME
-        File f = SPIFFS.open("/conf/hostname.txt", "r");
-        if(!f) {
-                return false;
-        } else {
-                m_hostname = f.readStringUntil('\n');
-        }
-        f.close();
-
-
-        f = SPIFFS.open("/conf/mqtt.txt", "r");
-        if(!f) {
-                return false;
-        } else {
-                m_mqttServer = f.readStringUntil('\n');
-        }
-        f.close();
-
-        f = SPIFFS.open("/conf/ssid.txt", "r");
-        if(!f) {
-                return false;
-        } else {
-                m_ssid = f.readStringUntil('\n');
-        }
-        f.close();
-
-        f = SPIFFS.open("/conf/psk.txt", "r");
-        if(!f) {
-                return false;
-        } else {
-                m_psk = f.readStringUntil('\n');
-        }
-        f.close();
-
-        f = SPIFFS.open("/conf/dht.txt", "r");
-        if(!f) {
-                m_useDht = false;
-        } else {
-                m_dhtPin = f.parseInt();
-                //TODO sanity check
-                m_useDht = true;
-        }
-        f.close();
-
-        f = SPIFFS.open("/conf/elro_send.txt", "r");
-        if(!f) {
-                m_useElroSender = false;
-        } else {
-                m_elroSenderPin = f.parseInt();
-                //TODO sanity check
-                m_useElroSender = true;
-        }
-        f.close();
-
-
-        return true;
-
-        */
-
 }
 
 void Settings::printData() const
