@@ -170,6 +170,8 @@ void setup()
 
         Serial.println("Setup finished");
 
+        if(settings.disableLed())
+                digitalWrite(BUILTIN_LED, HIGH);
 
 }
 
@@ -181,7 +183,8 @@ void loop()
 
 
         if (!client.connected()) {
-                digitalWrite(BUILTIN_LED, LOW);
+                if(!settings.disableLed())
+                        digitalWrite(BUILTIN_LED, LOW);
                 if((now -lastReconnect) > MQTT_RECONNECT_RATE) {
                         reconnect();
                         lastReconnect = now;
@@ -189,7 +192,8 @@ void loop()
                 delay(10);
         }
         else {
-                digitalWrite(BUILTIN_LED, HIGH);
+                if(!settings.disableLed())
+                        digitalWrite(BUILTIN_LED, HIGH);
                 client.loop();
 
                 if(settings.useDht()) {

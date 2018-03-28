@@ -17,6 +17,7 @@ public:
   int elroSenderPin() const;
   String ssid() const;
   String psk() const;
+  bool disableLed() const;
 
 
   void printData() const;
@@ -31,6 +32,7 @@ private:
   int m_elroSenderPin = 0;
   String m_ssid;
   String m_psk;
+  bool m_disableLed = false;
 
 
 

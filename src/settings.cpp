@@ -9,6 +9,7 @@
 #define PSK "psk"
 #define DHT "dht"
 #define ELRO_SENDER "elro_sender"
+#define DISABLE_LED "disable_led"
 
 Settings::Settings()
 {
@@ -46,6 +47,7 @@ bool Settings::readFromFlash()
                   if(m_useElroSender) {
                     m_elroSenderPin = config.get<int>(ELRO_SENDER);
                   }
+                  m_disableLed = config.get<bool>(DISABLE_LED);
 
                   return true;
                 }
@@ -121,4 +123,9 @@ bool Settings::useElroSender() const
 int Settings::elroSenderPin() const
 {
         return m_elroSenderPin;
+}
+
+bool Settings::disableLed() const
+{
+        return m_disableLed;
 }
