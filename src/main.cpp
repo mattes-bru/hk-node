@@ -4,7 +4,6 @@
 #include <WiFiUdp.h>
 #include <FS.h>
 #include <ArduinoOTA.h>
-#include "wifi_config.h"
 #include <PubSubClient.h>
 #include <DHT.h>
 #include <RCSwitch.h>
@@ -30,9 +29,10 @@ bool canDeepSleep = false;
 float lastTemperature = 0.0f;
 float lastHumidity = 0.0f;
 
-String mqttHumidityTopic;
-String mqttTemperatureTopic;
+// String mqttHumidityTopic;
+// String mqttTemperatureTopic;
 String mqttListenTopic;
+String mqttSensorsTopic;
 
 Settings settings;
 WiFiClient espClient;
@@ -142,8 +142,7 @@ void setup()
                 settings.printData();
         }
 
-        mqttHumidityTopic = settings.hostname() + "/sensors/hum";
-        mqttTemperatureTopic = settings.hostname() + "/sensors/temp";
+        mqttSensorsTopic = settings.hostname() + "/sensors";
         mqttListenTopic = settings.hostname() + "/#";
 
         // pinMode(LED_RED,OUTPUT);
@@ -201,23 +200,28 @@ void loop()
                   float t = dht.getTemperature();
 
                   if(!isnan(t) && !isnan(h)) {
-                          if(abs(lastTemperature - t)  >  0.1) {
-                                  Serial.print("Temperature update: ");
-                                  Serial.print(t);
-                                  Serial.println("°C");
-                                  lastTemperature = t;
-                                  String tempString(t,2);
-                                  client.publish( mqttTemperatureTopic.c_str(), tempString.c_str(), true );
+                        if((abs(lastTemperature - t)  >  0.1)||(abs(lastHumidity - h)  >  1.0)) {
+                                Serial.print("Temperature update: ");
+                                Serial.print(t);
+                                Serial.println("°C");
+                                
+                                Serial.print("Humidity update: ");
+                                Serial.print(h);
+                                Serial.println("%");
+
+                                String tempString(t,2);
+                                String humString(h,2);
+
+                                String msg = String("{\"humidity\": " + humString +  ", \"temperature\": " + tempString + "}");
+
+                                client.publish( mqttSensorsTopic.c_str(), msg.c_str(), true );
+
+                                lastHumidity = h;
+                                lastTemperature = t;
                           }
 
                           if(abs(lastHumidity - h)  >  1.0) {
-                                  Serial.print("Humidity update: ");
-                                  Serial.print(h);
-                                  Serial.println("%");
 
-                                  lastHumidity = h;
-                                  String humString(h,2);
-                                  client.publish(mqttHumidityTopic.c_str(), humString.c_str(), true );
                           }
 
                   }

@@ -1,6 +1,5 @@
 # Firmware for an ESP based home automation node
 
-
 ## Configuration
 
 The node is configured by an json file named ```config.json```stored in root of the spiffs.
