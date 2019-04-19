@@ -15,6 +15,8 @@ public:
   String mqttServer() const;
   bool useElroSender() const;
   int elroSenderPin() const;
+  bool useTriggerInput() const;
+  int triggerInputPin() const;
   String ssid() const;
   String psk() const;
   bool disableLed() const;
@@ -30,6 +32,8 @@ private:
   String m_mqttServer;
   bool m_useElroSender = false;
   int m_elroSenderPin = 0;
+  bool m_useTriggerInput = false;
+  int m_triggerInputPin = 0;
   String m_ssid;
   String m_psk;
   bool m_disableLed = false;
