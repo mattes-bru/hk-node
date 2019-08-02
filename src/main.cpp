@@ -38,7 +38,7 @@ void callback(char *topic, byte *payload, unsigned int length);
 void reconnect()
 {
 
-        char mqtt_server[20];
+
         if (WiFi.status() == WL_CONNECTED)
         {
 
@@ -52,8 +52,7 @@ void reconnect()
                         setupDone = true;
                 }
 
-                settings.mqttServer().toCharArray(mqtt_server, 20);
-                client.setServer(mqtt_server, 1883);
+                client.setServer(settings.mqttServer(), 1883);
 
                 Serial.print("Attempting MQTT connection... ");
                 // Attempt to connect
@@ -139,9 +138,9 @@ void setup()
                 settings.printData();
         }
 
-        mqttSensorsTopic = settings.hostname() + "/sensors";
-        mqttAlertsTopic = settings.hostname() + "/alert";
-        mqttListenTopic = settings.hostname() + "/#";
+        mqttSensorsTopic = String(settings.hostname()) + "/sensors";
+        mqttAlertsTopic = String(settings.hostname()) + "/alert";
+        mqttListenTopic = String(settings.hostname()) + "/#";
 
         if (settings.useDht())
         {
@@ -161,7 +160,20 @@ void setup()
 
         WiFi.hostname(settings.hostname());
         WiFi.mode(WIFI_STA);
-        WiFi.begin(settings.ssid().c_str(), settings.psk().c_str());
+        WiFi.begin(settings.ssid(), settings.psk());
+        bool led = true;
+        while (WiFi.status() == WL_IDLE_STATUS)
+        {
+                
+                delay(500);
+                digitalWrite(BUILTIN_LED, led);
+                led = !led;
+        }
+
+        WiFi.printDiag(Serial);
+
+        Serial.print("Connected, IP address: ");
+        Serial.println(WiFi.localIP());
 
         Serial.println("Setup finished");
 

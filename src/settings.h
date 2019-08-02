@@ -9,16 +9,16 @@ public:
   bool readFromFlash();
   bool writeToFlash();
 
-  String hostname() const;
+  const char* hostname() const;
   bool useDht() const;
   int dhtPin() const;
-  String mqttServer() const;
+  const char* mqttServer() const;
   bool useElroSender() const;
   int elroSenderPin() const;
   bool useTriggerInput() const;
   int triggerInputPin() const;
-  String ssid() const;
-  String psk() const;
+  const char* ssid() const;
+  const char* psk() const;
   bool disableLed() const;
 
 
@@ -26,16 +26,16 @@ public:
 
 
 private:
-  String m_hostname;
+  const char* m_hostname;
   bool m_useDht = false;
   int m_dhtPin = 0;
-  String m_mqttServer;
+  const char* m_mqttServer;
   bool m_useElroSender = false;
   int m_elroSenderPin = 0;
   bool m_useTriggerInput = false;
   int m_triggerInputPin = 0;
-  String m_ssid;
-  String m_psk;
+  const char* m_ssid;
+  const char* m_psk;
   bool m_disableLed = false;
 
 

@@ -26,36 +26,37 @@ bool Settings::readFromFlash()
     if(!f) {
         Serial.println("can't open settings file");
         return false;
-    } else {
-        DynamicJsonBuffer jsonBuffer;
-        JsonObject& config = jsonBuffer.parseObject(f.readString());
+    } 
 
-        if(!config.success()) {
-        Serial.println("failed to parse json");
-           return false;
-        } else {
-            m_hostname = config.get<String>(HOSTNAME);
-            m_mqttServer = config.get<String>(MQTT_SERVER);
-            m_ssid = config.get<String>(SSID);
-            m_psk = config.get<String>(PSK);
-
-            m_useDht = config.containsKey(DHT);
-            if(m_useDht) {
-               m_dhtPin = config.get<int>(DHT);
-             }
-             m_useElroSender = config.containsKey(ELRO_SENDER);
-             if(m_useElroSender) {
-                m_elroSenderPin = config.get<int>(ELRO_SENDER);
-             }
-             m_useTriggerInput = config.containsKey(TRIGGER_INPUT);
-             if(m_useTriggerInput) {
-                m_triggerInputPin = config.get<int>(TRIGGER_INPUT);
-             }
-             m_disableLed = config.get<bool>(DISABLE_LED);
-
-             return true;
-        }
+    StaticJsonDocument<400> config;
+        
+    DeserializationError error = deserializeJson(config, f.readString());
+    if (error) {
+        Serial.print(F("deserializeJson() failed: "));
+        Serial.println(error.c_str());
+        return false;
     }
+
+    m_hostname = config[HOSTNAME];
+    m_mqttServer = config[MQTT_SERVER];
+    m_ssid = config[SSID];
+    m_psk = config[PSK];
+
+    m_useDht = config.containsKey(DHT);
+    if(m_useDht) {
+        m_dhtPin = config[DHT];
+        }
+        m_useElroSender = config.containsKey(ELRO_SENDER);
+        if(m_useElroSender) {
+        m_elroSenderPin = config[ELRO_SENDER];
+        }
+        m_useTriggerInput = config.containsKey(TRIGGER_INPUT);
+        if(m_useTriggerInput) {
+        m_triggerInputPin = config[TRIGGER_INPUT];
+        }
+        m_disableLed = config[DISABLE_LED];
+
+        return true;
 }
 
 void Settings::printData() const
@@ -95,17 +96,17 @@ void Settings::printData() const
 }
 
 
-String Settings::hostname() const
+const char* Settings::hostname() const
 {
     return m_hostname;
 }
 
-String Settings::ssid() const
+const char* Settings::ssid() const
 {
     return m_ssid;
 }
 
-String Settings::psk() const
+const char* Settings::psk() const
 {
    return m_psk;
 }
@@ -120,7 +121,7 @@ int Settings::dhtPin() const
     return m_dhtPin;
 }
 
-String Settings::mqttServer() const
+const char* Settings::mqttServer() const
 {
     return m_mqttServer;
 }
