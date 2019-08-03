@@ -1,5 +1,5 @@
 #include <arduino.h>
-
+#include <ArduinoJson.h>
 
 class Settings {
 
@@ -26,20 +26,7 @@ public:
 
 
 private:
-  const char* m_hostname;
-  bool m_useDht = false;
-  int m_dhtPin = 0;
-  const char* m_mqttServer;
-  bool m_useElroSender = false;
-  int m_elroSenderPin = 0;
-  bool m_useTriggerInput = false;
-  int m_triggerInputPin = 0;
-  const char* m_ssid;
-  const char* m_psk;
-  bool m_disableLed = false;
-
-
-
-
-
+  StaticJsonDocument<400> m_config;
+  bool m_error = false;
+ 
 };

@@ -51,9 +51,10 @@ void reconnect()
 
                         setupDone = true;
                 }
-
-                client.setServer(settings.mqttServer(), 1883);
-
+                Serial.print("local ip: ");
+                Serial.print( WiFi.localIP());
+                Serial.print("\tMQTT Server: ");
+                Serial.println(settings.mqttServer());
                 Serial.print("Attempting MQTT connection... ");
                 // Attempt to connect
                 if (client.connect((const char *)WiFi.hostname().c_str()))
@@ -138,6 +139,7 @@ void setup()
                 settings.printData();
         }
 
+        client.setServer(settings.mqttServer(), 1883);
         mqttSensorsTopic = String(settings.hostname()) + "/sensors";
         mqttAlertsTopic = String(settings.hostname()) + "/alert";
         mqttListenTopic = String(settings.hostname()) + "/#";
@@ -161,19 +163,6 @@ void setup()
         WiFi.hostname(settings.hostname());
         WiFi.mode(WIFI_STA);
         WiFi.begin(settings.ssid(), settings.psk());
-        bool led = true;
-        while (WiFi.status() == WL_IDLE_STATUS)
-        {
-                
-                delay(500);
-                digitalWrite(BUILTIN_LED, led);
-                led = !led;
-        }
-
-        WiFi.printDiag(Serial);
-
-        Serial.print("Connected, IP address: ");
-        Serial.println(WiFi.localIP());
 
         Serial.println("Setup finished");
 

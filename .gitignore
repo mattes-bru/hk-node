@@ -11,3 +11,4 @@ data/config.json
 .vscode/*.db
 .vscode/.browse.c_cpp.db*
 .vscode
+.pio

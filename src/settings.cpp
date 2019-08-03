@@ -28,125 +28,115 @@ bool Settings::readFromFlash()
         return false;
     } 
 
-    StaticJsonDocument<400> config;
+    
         
-    DeserializationError error = deserializeJson(config, f.readString());
+    DeserializationError error = deserializeJson(m_config, f.readString());
     if (error) {
         Serial.print(F("deserializeJson() failed: "));
         Serial.println(error.c_str());
+        m_error = true;
         return false;
     }
 
-    m_hostname = config[HOSTNAME];
-    m_mqttServer = config[MQTT_SERVER];
-    m_ssid = config[SSID];
-    m_psk = config[PSK];
+    return true;
 
-    m_useDht = config.containsKey(DHT);
-    if(m_useDht) {
-        m_dhtPin = config[DHT];
-        }
-        m_useElroSender = config.containsKey(ELRO_SENDER);
-        if(m_useElroSender) {
-        m_elroSenderPin = config[ELRO_SENDER];
-        }
-        m_useTriggerInput = config.containsKey(TRIGGER_INPUT);
-        if(m_useTriggerInput) {
-        m_triggerInputPin = config[TRIGGER_INPUT];
-        }
-        m_disableLed = config[DISABLE_LED];
-
-        return true;
 }
 
-void Settings::printData() const
-{
-    if(Serial) {
-        Serial.println("Settings:");
-
-        Serial.print("Hostname:\t");
-        Serial.println(m_hostname);
-
-        Serial.print("WIFI:\t");
-        Serial.print(m_ssid);
-        Serial.print(" ");
-        Serial.println(m_psk);
-
-        Serial.print("MQTT Server:\t");
-        Serial.println(m_mqttServer);
-
-        Serial.print("DHT:\t");
-        Serial.print(m_useDht);
-        Serial.print( " (");
-        Serial.print(m_dhtPin);
-        Serial.println( ")");
-
-        Serial.print("Trigger:\t");
-        Serial.print(m_useTriggerInput);
-        Serial.print( " (");
-        Serial.print(m_triggerInputPin);
-        Serial.println( ")");
-
-        Serial.print("ELRO Sender:\t");
-        Serial.print(m_useElroSender);
-        Serial.print( " (");
-        Serial.print(m_elroSenderPin);
-        Serial.println( ")");
-    }
-}
 
 
 const char* Settings::hostname() const
 {
-    return m_hostname;
+    if (m_error) 
+        return nullptr;
+    else
+        return m_config[HOSTNAME];
+        
 }
 
 const char* Settings::ssid() const
 {
-    return m_ssid;
+    if (m_error) 
+        return nullptr;
+    else
+        return m_config[SSID];
 }
 
 const char* Settings::psk() const
 {
-   return m_psk;
+    if (m_error) 
+        return nullptr;
+    else
+        return m_config[PSK];
 }
 
 bool Settings::useDht() const
 {
-    return m_useDht;
+        if (m_error) 
+        return false;
+    else
+        return m_config.containsKey(DHT);
 }
 
 int Settings::dhtPin() const
 {
-    return m_dhtPin;
+    if (m_error) 
+        return -1;
+    else
+        return m_config[DHT];
 }
 
 const char* Settings::mqttServer() const
 {
-    return m_mqttServer;
+    if (m_error) 
+        return nullptr;
+    else
+        return m_config[MQTT_SERVER];
 }
 
 bool Settings::useElroSender() const
 {
-    return m_useElroSender;
+        if (m_error) 
+        return false;
+    else
+        return m_config.containsKey(ELRO_SENDER);
 }
 
 int Settings::elroSenderPin() const
 {
-    return m_elroSenderPin;
+    if (m_error) 
+        return -1;
+    else
+        return m_config[ELRO_SENDER];
 }
 
 bool Settings::useTriggerInput() const
 {
-    return m_useTriggerInput;
+    if (m_error) 
+        return false;
+    else
+        return m_config.containsKey(TRIGGER_INPUT);
 }
 
 int Settings::triggerInputPin() const
 {
-    return m_triggerInputPin;
+    if (m_error) 
+        return -1;
+    else
+        return m_config[TRIGGER_INPUT];
 }
 
 bool Settings::disableLed() const
 {
-    return m_disableLed;
+    if (m_error) 
+        return false;
+    else
+        return m_config[DISABLE_LED];
+}
+
+void Settings::printData() const
+{
+    Serial.println("Used config:");
+    serializeJson(m_config, Serial);
+    Serial.println();
+    
 }
